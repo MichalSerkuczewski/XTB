@@ -2,9 +2,11 @@ import socket
 import ssl
 import json
 
+
+
 def main():
     PROLOG_RESP = "Resp: "
-
+    EPILOG_RESP = ""
     host = 'xapi.xtb.com'
     port = 5124
     host = socket.getaddrinfo(host,port)[0][4][0]
