@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import socket
+import ssl
+import json
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    PROLOG_RESP = "Resp: "
+
+    host = 'xapi.xtb.com'
+    port = 5124
+    host = socket.getaddrinfo(host,port)[0][4][0]
+    s = socket.socket()
+    s.connect((host,port))
+    s = ssl.wrap_socket(s)
+    end = b'\n\n'
+
+    login = 1000
+    pswd = 'PASSWORD'
+    parameters = {
+        "command": "login",
+        "arguments": {
+            "userId": f'{login}',
+            "password": f'{pswd}'
+        }
+    }
+    packet = json.dumps(parameters)
+    print(packet)
+    s.send(packet.encode("UTF-8"))
+
+    response = s.recv(8192)
+    if end in response:
+        print(PROLOG_RESP, response[:response.find(end)])
+    else:
+        print('login:', response)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('github! ;)')
+    main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
